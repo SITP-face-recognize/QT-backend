@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Course, Sign, SignDetail
-
+from user.serializers import StudentSerializer
 # 获取自定义User
 User = get_user_model()
 
@@ -22,6 +22,12 @@ class CourseUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ('id', 'courseName', 'courseInfo', 'student', 'teacher')
+
+class CourseStudentListSerializer(serializers.ModelSerializer):
+    student=StudentSerializer(many=True)
+    class Meta:
+        model=Course
+        fields=('student',)
 
 
 class TeacherCourseSerializer(serializers.ModelSerializer):

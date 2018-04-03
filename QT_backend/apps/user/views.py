@@ -22,6 +22,7 @@ class StudentViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Re
             return [permissions.IsAuthenticated()]
         elif self.action == "create" or self.action == 'update' or self.action == 'partial_update':
             return []
+        return []
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -43,8 +44,9 @@ class TeacherViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewset
     def get_permissions(self):
         if self.action == "retrieve":
             return [permissions.IsAuthenticated()]
-        elif self.action == "create":
+        elif self.action == "create" or self.action == 'update' or self.action == 'partial_update':
             return []
+        return []
 
     def get_serializer_class(self):
         if self.action == "create":

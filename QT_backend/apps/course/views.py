@@ -1,17 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.response import Response
-from django.core import serializers
 from rest_framework import mixins
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .models import Course, Sign, SignDetail
-from django.db import connection
 from .serializers import CourseUpdateSerializer, CourseRetrieveSerializer, \
     CourseCreateSerializer, TeacherCourseSerializer, \
     SignSerializer, SignCreateSerializer, SignDetailCreateSerializer, \
-    SignSignDetailSerializer, CourseSignSerializer
+    SignSignDetailSerializer, CourseSignSerializer,CourseStudentListSerializer
 
 # 获取自定义User
 User = get_user_model()
@@ -24,7 +22,7 @@ User = get_user_model()
 class CourseViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                     viewsets.GenericViewSet):
     queryset = Course.objects.all()
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
 
     def get_serializer_class(self):
@@ -42,7 +40,7 @@ class CourseViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.U
 
 
 class TeacherCourseViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = TeacherCourseSerializer
 
@@ -56,7 +54,7 @@ class TeacherCourseViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
 
 class SignViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = SignCreateSerializer
     queryset = Sign.objects.all()
@@ -68,7 +66,7 @@ class SignViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class CourseSignViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = CourseSignSerializer
     queryset = Course.objects.all()
@@ -80,7 +78,7 @@ class CourseSignViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
 
 class SignDetailViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = SignDetailCreateSerializer
     queryset = SignDetail.objects.all()
@@ -92,7 +90,7 @@ class SignDetailViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class SignSignDetailViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     queryset = Sign.objects.all()
     serializer_class = SignSignDetailSerializer
@@ -128,3 +126,12 @@ class SignSignDetailViewset(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         queryDict['nonsignList']=nonsignList
 
         return Response(queryDict)
+
+    """
+    获取课程的学生列表
+    """
+class CourseStudentViewset(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    queryset = Course.objects.all()
+    serializer_class = CourseStudentListSerializer

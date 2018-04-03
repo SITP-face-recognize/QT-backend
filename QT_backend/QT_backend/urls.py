@@ -22,7 +22,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.routers import DefaultRouter
 from django.views.generic import TemplateView
 from user.views import StudentViewset, TeacherViewset
-from course.views import CourseViewset,TeacherCourseViewset,SignViewset,CourseSignViewset,SignDetailViewset,SignSignDetailViewset
+from course.views import CourseViewset,TeacherCourseViewset,SignViewset,CourseSignViewset,SignDetailViewset,SignSignDetailViewset,CourseStudentViewset
 router = DefaultRouter()
 
 router.register(r'student', StudentViewset, base_name="student")
@@ -40,6 +40,8 @@ router.register(r'teacherCourse', TeacherCourseViewset, base_name="teacherCourse
 router.register(r'courseSign', CourseSignViewset, base_name="courseSign")
 
 router.register(r'signSignDetail', SignSignDetailViewset, base_name="signSignDetail")
+
+router.register(r'courseStudent', CourseStudentViewset, base_name="courseStudent")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
