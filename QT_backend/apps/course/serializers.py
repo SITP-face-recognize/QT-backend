@@ -1,45 +1,74 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Course,Sign
+from .models import Course, Sign, SignDetail
 
 # 获取自定义User
-Teacher = get_user_model()
+User = get_user_model()
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class CourseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = ('courseName', 'courseInfo')
+
+
+class CourseRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'courseName', 'courseInfo')
+
+
+class CourseUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'courseName', 'courseInfo', 'student', 'teacher')
+
+
+class TeacherCourseSerializer(serializers.ModelSerializer):
+    teacher_course = CourseRetrieveSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = ('teacher_course',)
+
+
+class SignDetailCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SignDetail
+        fields = ('sign', 'student', 'signKind')
+
+
+class SignCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sign
+        fields = ('id', 'course')
 
 
 class SignSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sign
-        fields = '__all__'
+        fields = ('id', 'signTime')
 
-class TeacherCourseListSerializer(serializers.ModelSerializer):
-    courseId=serializers.ReadOnlyField(source='course_set.id')
-    courseName=serializers.ReadOnlyField(source='course_set.courseName')
+
+class CourseSignSerializer(serializers.ModelSerializer):
+    course_sign = SignSerializer(many=True)
+
     class Meta:
-        model = Teacher
-        fields=('courseId','courseName')
+        model = Course
+        fields = ('course_sign',)
 
 
-class SignListSerializer(serializers.ModelSerializer):
-    studentName=serializers.ReadOnlyField(source='student.name')
-    studentId=serializers.ReadOnlyField(source='student.stuId')
+class SignDetailSerializer(serializers.ModelSerializer):
+    studentName = serializers.ReadOnlyField(source='student.name')
+    studentId=serializers.ReadOnlyField(source='student.id')
     class Meta:
-        model= Sign
-        fields=('studentName','studentId','signTime')
+        model = SignDetail
+        fields = ('signTime', 'studentName','studentId')
 
 
+class SignSignDetailSerializer(serializers.ModelSerializer):
+    sign_signDetail = SignDetailSerializer(many=True)
 
-class CourseSignListSerializer(serializers.ModelSerializer):
-    sign=SignSerializer(many=True)
-    signNum=serializers.SerializerMethodField()
     class Meta:
-        model=Course
-        fields=('id','sign')
-
-    def get_signNum(self,obj):
-        return obj.sign.all().count()
+        model = Sign
+        fields = ('sign_signDetail',)
