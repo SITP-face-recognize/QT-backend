@@ -20,14 +20,14 @@ class StudentViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Re
     def get_permissions(self):
         if self.action == "retrieve":
             return [permissions.IsAuthenticated()]
-        elif self.action == "create" or self.action == 'update' or self.action == 'partial_update':
+        elif self.action == "create" or self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
             return []
         return []
 
     def get_serializer_class(self):
         if self.action == "create":
             return StudentRegisterSerializer
-        elif self.action == "retrieve"or self.action == 'update' or self.action == 'partial_update':
+        elif self.action == "retrieve"or self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
             return StudentSerializer
 
     def get_object(self):

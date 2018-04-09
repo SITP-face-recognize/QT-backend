@@ -12,9 +12,6 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
                                          UniqueValidator(queryset=User.objects.all(), message="用户已经存在")
                                      ])
 
-    password = serializers.CharField(
-        style={'input_type': 'password'}, help_text="密码", label="密码", write_only=True,
-    )
     stuId = serializers.CharField(label="学号", help_text="学号", required=True, allow_blank=False,
                                      validators=[
                                          UniqueValidator(queryset=User.objects.all(), message="学号已经存在")
@@ -23,15 +20,15 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
         default='student'
     )
 
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'userType', 'stuId')
-
     def create(self, validated_data):
         user = super(StudentRegisterSerializer, self).create(validated_data=validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
+        print(validated_data)
         return user
+
+    class Meta:
+        model = User
+        fields = ('id','name','username','student_course','userType', 'stuId')
+
 
 
 
@@ -54,7 +51,7 @@ class TeacherRegisterSerializer(serializers.ModelSerializer):
                                      ])
     class Meta:
         model = User
-        fields = ('username', 'password', 'userType', 'workId')
+        fields = ('id','username', 'password','name', 'userType', 'workId')
 
     def create(self, validated_data):
         user = super(TeacherRegisterSerializer, self).create(validated_data=validated_data)

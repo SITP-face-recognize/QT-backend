@@ -33,7 +33,7 @@ class SignDetail(models.Model):
     """
     SIGNKIND_CHOICE = (
         ('manual', '手动'),
-        ('face', '刷脸')
+        ('face', '刷脸'),
     )
     sign = models.ForeignKey(Sign, on_delete=models.CASCADE, related_name='sign_signDetail')
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sign_signDetail')
